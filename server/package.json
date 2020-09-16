@@ -1,0 +1,17 @@
+{
+  "name": "chat-server",
+  "version": "1.0.0",
+  "description": "Chat server",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Huy Nguyen",
+  "license": "MIT",
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
+  }
+}
