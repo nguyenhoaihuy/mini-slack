@@ -41,12 +41,23 @@ isUserExisting = (id) => {
 addRoomToUser = (username,roomname) => {
     username = username.trim().toLowerCase();
     const existingUser = users.findIndex((user) => user.name === username);
-    console.log(existingUser);
     if (existingUser === -1) return {error: `The user ${username} does not exist`};
     const foundroom = users[existingUser].rooms.findIndex((room) => room===roomname);
     if (foundroom !== -1) return {error: `The user ${username} is already in the room ${roomname}`};
     
     users[existingUser].rooms.push(roomname);
+    return {rooms:users[existingUser].rooms};
+}
+
+removeRoomFromUser = (username,roomname) => {
+    username = username.trim().toLowerCase();
+    const existingUser = users.findIndex((user) => user.name === username);
+    if (existingUser === -1) return {error: `The user ${username} does not exist`};
+    const foundroom = users[existingUser].rooms.findIndex((room) => room===roomname);
+    if (foundroom === -1) return {error: `The user ${username} is not in the room ${roomname}`};
+    
+    users[existingUser].rooms = users[existingUser].rooms.filter((room) => room !== roomname);
+    console.log(users);
     return {rooms:users[existingUser].rooms};
 }
 

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     publicRoom: {
       width: '100%',
-      height: '69%',
+      height: '100%',
       backgroundColor: theme.palette.background.paper,
       position: 'relative',
       overflow: 'auto',
@@ -18,7 +18,6 @@ const PublicRoom = (props) => {
     const classes = useStyles();
     const [rooms,setRooms] = useState([]);
     const [joinRooms,setJoinRooms] = useState([]);
-    console.log(props);
     useEffect(()=>{
       setRooms(props.rooms);
       setJoinRooms(props.joinRooms);

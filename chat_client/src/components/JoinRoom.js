@@ -19,9 +19,12 @@ const JoinRoom = (props) => {
     return(
         <List component="nav" className={classes.joinRoom} aria-label="main mailbox folders">
             {props.joinRooms.map((room) => {
-                return(<ListItem button key={room} >
+                return(<ListItem button key={room} onClick={() => {props.selectRoom(room);}}>
                   <ListItemText primary={room}/>
-                  <RemoveIcon onClick={()=>{}}/>
+                  <RemoveIcon onClick={(e)=>{
+                    e.stopPropagation();
+                    props.leaveRoom(room);
+                    }}/>
                   </ListItem>);
             })}
         </List>

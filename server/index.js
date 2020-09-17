@@ -27,6 +27,7 @@ io.on('connection', (socket) => {
             console.log(error);
         }
     });
+    
     // socket.on("sendroom", () => {
     //     let {error,room} = addRoom("hello1","p2p");
     //     if (error){
@@ -52,13 +53,30 @@ io.on('connection', (socket) => {
             callback(error);
         }
         else {
+            socket.join(roomName);
+            socket.emit('getUserRooms', {rooms});
+        }
+    });
+    socket.on('removeRoomFromUser', ({userName,roomName},callback) =>{
+        console.log(userName); 
+        const {error,rooms} = removeRoomFromUser(userName,roomName);
+        if (error){
+            callback(error);
+        }
+        else {
             console.log(rooms);
+            socket.leave(roomName);
             socket.emit('getUserRooms', {rooms});
         }
     });
     socket.on('disconnect', () => {
         console.log(removeUser(socket.id));
         console.log('User had left!!! '+socket.id);
+    });
+    socket.on('sendMessage', ({userName,userMessage,selectedRoom}) => {
+        roomName = selectedRoom;
+        console.log("kekek");
+        io.to(roomName).emit('sendMessageToRoom',{roomName,userName,userMessage});
     });
     socket.on('reconnect', () => {
         console.log("reconnected");
