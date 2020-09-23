@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
       overflow: 'auto',
       
     },
+    removeIcon: {
+      color: "#d10300"
+    }
   }));
 
 const JoinRoom = (props) => {
@@ -21,7 +24,7 @@ const JoinRoom = (props) => {
             {props.joinRooms.map((room) => {
                 return(<ListItem button key={room} onClick={() => {props.selectRoom(room);}}>
                   <ListItemText primary={room}/>
-                  <RemoveIcon onClick={(e)=>{
+                  <RemoveIcon className={classes.removeIcon} onClick={(e)=>{
                     e.stopPropagation();
                     props.leaveRoom(room);
                     }}/>

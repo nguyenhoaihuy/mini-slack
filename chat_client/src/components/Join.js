@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {ListItem,Divider,Grid,TextField,Button} from '@material-ui/core';
+
 import PublicRoom from './PublicRoom';
 import JoinRoom from './JoinRoom';
 import ChatBox from './ChatBox';
+import Popup from './Popup';
 import SendIcon from '@material-ui/icons/Send';
 import { makeStyles } from '@material-ui/core/styles';
 import io from 'socket.io-client';
@@ -62,20 +64,21 @@ const Join = () => {
     const [rooms, setRooms] = useState([]);
     const [joinRooms, setJoinRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
+    const [notification, setNotification] = useState({status:"hide",severity:"",message:""});
     // let selectedRoom = '';
     const [allMessage,setAllMessage] = useState([])
     const classes = useStyles();
     
     const addRoom = (roomName) => {
         if (userName === ""){
-            console.log("You have to select an username!");
+            setNotification({status:"show",severity:"error",message:"You have to select an username!"});
         } else {
             setSelectedRoom(roomName);
             socket.emit("addRoomToUser",{userName,roomName},(message)=>{
-                console.log(message);
+                setNotification({status:"show",severity:"error",message:message});
                 return
             });
-            console.log(`Room ${selectedRoom} selected`);
+            setNotification({status:"show",severity:"success",message:`You entered room ${roomName}`});
         }
         
     };
@@ -85,9 +88,12 @@ const Join = () => {
             console.log(message);
         });
         setAllMessage((prep)=>prep.filter(item=>item.room!==roomName));
+        setNotification({status:"show",severity:"success",message:`You left room ${roomName}`});
     }
     
-
+    useEffect(()=>{
+        // setNotification({status:"show",severity:"",message:""});
+    },[userName,rooms,joinRooms,selectedRoom]);
     useEffect(()=>{
         socket = io(ENDPOINT);
         // console.log(name);
@@ -116,50 +122,70 @@ const Join = () => {
     },[selectedRoom])
 
     useEffect(()=>{
+        console.log("haha");
         if (!joinRooms.includes(selectedRoom) && joinRooms.length != 0)
             setSelectedRoom(joinRooms[0]);
         if (joinRooms.length == 0)
             setSelectedRoom("");
     },[joinRooms]);
 
-    useEffect(()=>{
-        // console.log(allMessage);
-    },[allMessage]);
+    // useEffect(()=>{
+    //     // console.log(allMessage);
+    // },[allMessage]);
 
     useEffect(()=>{
-        socket.emit("addUser", {user:userName}, (message) => {
-            console.log(message);
-            return
-        });
-    },[userName]);
+        // const timer = setTimeout(() => {
+        //     setNotification({status:"hide",severity:"",message:""});
+        // }, 5000);
+          
+    },[notification]);
 
     const changeNameHandler = ()=>{
         const username = document.getElementById('username').value;
-        if (username == "") console.log("Username cannot be empty string");
-        else setUserName(username);
+        setUserName(username);
+        if (username == "") setNotification({status:"show",severity:"error",message:"Username cannot be empty string"});
+        else {
+            socket.emit("addUser", {user:username}, (message) => {
+                setUserName("");
+                setNotification({status:"show",severity:"error",message:message});
+                document.getElementById('username').value = "";
+                return
+            });
+            setNotification({status:"show",severity:"success",message:`Your username is ${username}`});
+        }
+        
     };
     const sendMessageHandler = () => {
         const userMessage = document.getElementById('message').value;
         if (userMessage == "") return;
-        else if (selectedRoom === "") console.log("Need to select a room!");
-        else
-        socket.emit("sendMessage", {userName,userMessage,selectedRoom}, (message) => {
-            console.log(message);
-            return;
-        });
+        else if (selectedRoom === "") {
+            console.log("hahah1111");
+            setNotification({status:"show",severity:"error",message:"Need to select a room!"});
+        } else {
+            socket.emit("sendMessage", {userName,userMessage,selectedRoom}, (message) => {
+                setNotification({status:"show",severity:"error",message:message});
+                return;
+            });
+        }
+        
         document.getElementById('message').value = "";
     };
 
     const selectRoomChat = (name) => {
         setSelectedRoom(name);
-
-        console.log(`Room ${selectedRoom} selected`);
+        console.log("haha");
+        setNotification({status:"show",severity:"success",message:`Room ${selectedRoom} selected`});
     };
+
+    const disableAlert = () => {
+        setNotification({status:"hide",severity:"",message:""});
+    }
 
     return(
         <div className={classes.join}>
             <TextField id="username" className={classes.username} label="Username" variant="outlined" />
             <Button variant="contained" id="changename" onClick={changeNameHandler} className={classes.changename} color="primary">Change Name</Button>
+            <Popup notification={notification} disableAlert={disableAlert}/>
             <Grid container className={classes.grid} spacing={1}>
                 <Grid item className={classes.roomArea} xs={3} >
                     <Grid container className={classes.joinRoom} spacing={1}>

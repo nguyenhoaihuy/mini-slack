@@ -7,18 +7,21 @@ addUser = (name,id) => {
     const existingUser = users.findIndex((user) => user.name === name);
     if (existingUser!==-1) {
         return {error:`The user ${name} already existed`};
+    } else{
+        const existingSocket = users.findIndex((user) => user.id === id);
+        if (existingSocket!==-1) {
+            users[existingSocket].name = name;
+            return {user:users[existingSocket]};
+        } else{
+            let rooms = [];
+            let user = {name,rooms,id};
+            users.push(user);
+            console.log(users);
+            return {user}
+        }
+        
     }
-    const existingSocket = users.findIndex((user) => user.id === id);
-    if (existingSocket!==-1) {
-        users[existingSocket].name = name;
-        return {user:users[existingSocket]};
-    }
-
-    let rooms = [];
-    let user = {name,rooms,id};
-    users.push(user);
-    console.log(users);
-    return {user}
+    
 }
 
 removeUser = (id) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {Paper,List,ListItemText} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -6,12 +6,21 @@ const useStyles = makeStyles((theme) => ({
     chatScreen: {
         height: '80%',
         padding: '10px',
-        overflowY: 'scroll'
+        overflowY: 'auto'
     }
   }));
 
 const ChatBox = (props) => {
     const classes = useStyles();
+    const messagesEnd = useRef(null);
+    const scrollToBottom = () => {
+        if (messagesEnd && messagesEnd.current) {
+            messagesEnd.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+    useEffect(() => {
+        scrollToBottom();
+    },[messagesEnd]);
     useEffect(()=>{
         // props.allMessage.find((room)=>room.room===props.seletedRoom).map((item)=>{
         //     console.log(item.user);
@@ -25,7 +34,7 @@ const ChatBox = (props) => {
     if (!props.isEmpty){
         return(
             <Paper className={classes.chatScreen} elevation={0}  >
-                <List component="nav">
+                <List id="scroll" component="nav">
                     {
                         props.allMessage.filter(i=>i.room===props.selectedRoom).map((item)=>{
                             return(<ListItemText><span>{item.user}: </span><span>{item.message}</span></ListItemText>);

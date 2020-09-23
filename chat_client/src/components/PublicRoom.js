@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
       overflow: 'auto',
       borderTop: '4px solid #4fb9ff',
     },
+    addIcon: {
+      color: "#0aab4d"
+    }
   }));
 
 const PublicRoom = (props) => {
@@ -33,7 +36,7 @@ const PublicRoom = (props) => {
               } else {
                 return (<ListItem button  key={room.id} >
                   <ListItemText primary={room.name}/>
-                  <AddIcon onClick={()=>{props.addRoom(room.name)}}/>
+                  <AddIcon className={classes.addIcon} onClick={()=>{props.addRoom(room.name)}} />
                   </ListItem>);
               }
               
