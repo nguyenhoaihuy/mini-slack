@@ -19,8 +19,9 @@ const ChatBox = (props) => {
         }
     };
     useEffect(() => {
-        scrollToBottom();
-    },[messagesEnd]);
+        if (document.getElementById("chatScreen")!=null && document.getElementById("scroll")!=null)
+        document.getElementById("chatScreen").scrollTop = document.getElementById("scroll")==null?0:document.getElementById("scroll").scrollHeight;
+    },[props]);
     useEffect(()=>{
         // props.allMessage.find((room)=>room.room===props.seletedRoom).map((item)=>{
         //     console.log(item.user);
@@ -33,7 +34,7 @@ const ChatBox = (props) => {
     
     if (!props.isEmpty){
         return(
-            <Paper className={classes.chatScreen} elevation={0}  >
+            <Paper className={classes.chatScreen} elevation={0} id="chatScreen" >
                 <List id="scroll" component="nav">
                     {
                         props.allMessage.filter(i=>i.room===props.selectedRoom).map((item)=>{
