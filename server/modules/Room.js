@@ -1,6 +1,6 @@
-rooms = [{ id: 'id1600114015791', name: 'hello1', status: 'p2p' },
-        { id: 'id1600114015793', name: 'hello2', status: 'p2p' },
-        { id: 'id1600114015799', name: 'hello3', status: 'p2p' }]
+rooms = [{ id: 'id1600114015791', name: '#general', status: 'p2p' },
+        { id: 'id1600114015793', name: '#random', status: 'p2p' },
+        { id: 'id1600114015799', name: '#hiking', status: 'p2p' }]
 
 addRoom = (name,status) => {
     name = name.trim().toLowerCase();

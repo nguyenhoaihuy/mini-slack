@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+    server:
+        image: hoaihuy/node-api:v1
+        container_name: chat-server
+        ports:
+            - "5000:5000"
+        restart: always
+        networks: 
+            - app-network
+    client:
+        image: hoaihuy/node-app:v1
+        container_name: chat-client
+        ports: 
+            - "3000:3000"
+        restart: always
+        networks: 
+            - app-network
+networks: 
+    app-network:
+        driver: bridge
